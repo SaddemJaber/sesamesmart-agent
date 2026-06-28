@@ -1,0 +1,202 @@
+[
+  {
+    "id": "ETU001",
+    "nom": "Bennani",
+    "prenom": "Ahmed",
+    "filiere": "MANAGEMENT",
+    "annee": 1,
+    "email": "ahmed.bennani@etu.sesame.ma",
+    "moyenne_generale": 14.5,
+    "statut_financier": "A_JOUR"
+  },
+  {
+    "id": "ETU002",
+    "nom": "El Idrissi",
+    "prenom": "Mohamed",
+    "filiere": "MANAGEMENT",
+    "annee": 1,
+    "email": "mohamed.el.idrissi@etu.sesame.ma",
+    "moyenne_generale": 12.75,
+    "statut_financier": "A_JOUR"
+  },
+  {
+    "id": "ETU003",
+    "nom": "Tazi",
+    "prenom": "Yassine",
+    "filiere": "MANAGEMENT",
+    "annee": 1,
+    "email": "yassine.tazi@etu.sesame.ma",
+    "moyenne_generale": 12.0,
+    "statut_financier": "BLOQUE"
+  },
+  {
+    "id": "ETU004",
+    "nom": "Chraibi",
+    "prenom": "Hamza",
+    "filiere": "FTA",
+    "annee": 3,
+    "email": "hamza.chraibi@etu.sesame.ma",
+    "moyenne_generale": 12.25,
+    "statut_financier": "A_JOUR"
+  },
+  {
+    "id": "ETU005",
+    "nom": "Alami",
+    "prenom": "Karim",
+    "filiere": "MANAGEMENT",
+    "annee": 1,
+    "email": "karim.alami@etu.sesame.ma",
+    "moyenne_generale": 11.75,
+    "statut_financier": "A_JOUR"
+  },
+  {
+    "id": "ETU006",
+    "nom": "Fassi",
+    "prenom": "Ahmed",
+    "filiere": "ING",
+    "annee": 3,
+    "email": "ahmed.fassi@etu.sesame.ma",
+    "moyenne_generale": 8.75,
+    "statut_financier": "BLOQUE"
+  },
+  {
+    "id": "ETU007",
+    "nom": "Berrada",
+    "prenom": "Sara",
+    "filiere": "FTA",
+    "annee": 1,
+    "email": "sara.berrada@etu.sesame.ma",
+    "moyenne_generale": 11.75,
+    "statut_financier": "A_JOUR"
+  },
+  {
+    "id": "ETU008",
+    "nom": "Kettani",
+    "prenom": "Fatima",
+    "filiere": "ING",
+    "annee": 1,
+    "email": "fatima.kettani@etu.sesame.ma",
+    "moyenne_generale": 10.25,
+    "statut_financier": "BLOQUE"
+  },
+  {
+    "id": "ETU009",
+    "nom": "Sekkat",
+    "prenom": "Nadia",
+    "filiere": "FTA",
+    "annee": 2,
+    "email": "nadia.sekkat@etu.sesame.ma",
+    "moyenne_generale": 14.5,
+    "statut_financier": "A_JOUR"
+  },
+  {
+    "id": "ETU010",
+    "nom": "Lahlou",
+    "prenom": "Zineb",
+    "filiere": "MANAGEMENT",
+    "annee": 2,
+    "email": "zineb.lahlou@etu.sesame.ma",
+    "moyenne_generale": 9.75,
+    "statut_financier": "A_JOUR"
+  },
+  {
+    "id": "ETU011",
+    "nom": "Benali",
+    "prenom": "Omar",
+    "filiere": "ING",
+    "annee": 1,
+    "email": "omar.benali@etu.sesame.ma",
+    "moyenne_generale": 8.0,
+    "statut_financier": "A_JOUR"
+  },
+  {
+    "id": "ETU012",
+    "nom": "Ouali",
+    "prenom": "Bilal",
+    "filiere": "ING",
+    "annee": 3,
+    "email": "bilal.ouali@etu.sesame.ma",
+    "moyenne_generale": 11.0,
+    "statut_financier": "A_JOUR"
+  },
+  {
+    "id": "ETU013",
+    "nom": "Mansouri",
+    "prenom": "Anas",
+    "filiere": "FTA",
+    "annee": 1,
+    "email": "anas.mansouri@etu.sesame.ma",
+    "moyenne_generale": 10.25,
+    "statut_financier": "A_JOUR"
+  },
+  {
+    "id": "ETU014",
+    "nom": "Zouhair",
+    "prenom": "Ilyas",
+    "filiere": "FTA",
+    "annee": 1,
+    "email": "ilyas.zouhair@etu.sesame.ma",
+    "moyenne_generale": 8.75,
+    "statut_financier": "BLOQUE"
+  },
+  {
+    "id": "ETU015",
+    "nom": "Hilal",
+    "prenom": "Reda",
+    "filiere": "ING",
+    "annee": 3,
+    "email": "reda.hilal@etu.sesame.ma",
+    "moyenne_generale": 13.25,
+    "statut_financier": "A_JOUR"
+  },
+  {
+    "id": "ETU016",
+    "nom": "Cherkaoui",
+    "prenom": "Mariam",
+    "filiere": "MANAGEMENT",
+    "annee": 2,
+    "email": "mariam.cherkaoui@etu.sesame.ma",
+    "moyenne_generale": 11.25,
+    "statut_financier": "A_JOUR"
+  },
+  {
+    "id": "ETU017",
+    "nom": "Benkiran",
+    "prenom": "Hajar",
+    "filiere": "MANAGEMENT",
+    "annee": 3,
+    "email": "hajar.benkiran@etu.sesame.ma",
+    "moyenne_generale": 15.75,
+    "statut_financier": "A_JOUR"
+  },
+  {
+    "id": "ETU018",
+    "nom": "El Amrani",
+    "prenom": "Dounia",
+    "filiere": "FTA",
+    "annee": 1,
+    "email": "dounia.el.amrani@etu.sesame.ma",
+    "moyenne_generale": 14.0,
+    "statut_financier": "A_JOUR"
+  },
+  {
+    "id": "ETU019",
+    "nom": "Saidi",
+    "prenom": "Salma",
+    "filiere": "ING",
+    "annee": 3,
+    "email": "salma.saidi@etu.sesame.ma",
+    "moyenne_generale": 11.75,
+    "statut_financier": "A_JOUR"
+  },
+  {
+    "id": "ETU020",
+    "nom": "Naciri",
+    "prenom": "Soufiane",
+    "filiere": "FTA",
+    "annee": 1,
+    "email": "soufiane.naciri@etu.sesame.ma",
+    "moyenne_generale": 10.75,
+    "statut_financier": "A_JOUR"
+  }
+]

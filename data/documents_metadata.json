@@ -1,0 +1,87 @@
+[
+  {
+    "id": "DOC001",
+    "titre": "Note de service — Gestion et validation des absences sur KONOSYS",
+    "type": "note",
+    "source": "Note de Service - Gestion et validation des absences étudiantes sur KONOSYS (4).pdf",
+    "filiere": null,
+    "access_level": "etudiant",
+    "rag_readiness": "excellent",
+    "rag_suitable": true,
+    "preprocessing_needed": false,
+    "preprocessing_notes": "",
+    "test_case": {
+      "question": "Comment contester une absence sur KONOSYS ?",
+      "expected_behavior": "answer_with_source",
+      "source_doc_id": "DOC001"
+    }
+  },
+  {
+    "id": "DOC002",
+    "titre": "Règlement Intérieur Département FTA (RI-SCO-02)",
+    "type": "reglement",
+    "source": "RI-SCO-02 Reglement Interieur Département FTA.pdf",
+    "filiere": "FTA",
+    "access_level": "etudiant",
+    "rag_readiness": "good",
+    "rag_suitable": true,
+    "preprocessing_needed": true,
+    "preprocessing_notes": "Nettoyer les lignes de pagination isolées entre les articles",
+    "test_case": {
+      "question": "Quelles sont les règles de comportement en salle de cours ?",
+      "expected_behavior": "answer_with_source",
+      "source_doc_id": "DOC002"
+    }
+  },
+  {
+    "id": "DOC003",
+    "titre": "Charte de l'étudiant Sesame",
+    "type": "charte",
+    "source": "CHARTE DE L'ÉTUDIANT SESAME.pptx.pdf",
+    "filiere": null,
+    "access_level": "etudiant",
+    "rag_readiness": "moyenne",
+    "rag_suitable": true,
+    "preprocessing_needed": true,
+    "preprocessing_notes": "Retirer toutes les balises [Visual Elements] et [Image: ...] — bruit PPT",
+    "test_case": {
+      "question": "Quelles sont les règles pendant un examen ?",
+      "expected_behavior": "partial_answer_degraded",
+      "source_doc_id": "DOC003"
+    }
+  },
+  {
+    "id": "DOC004",
+    "titre": "Email — Processus de réinscription",
+    "type": "email",
+    "source": "Messagerie SESAME - Clarification concernant le processus de réinscription.pdf",
+    "filiere": null,
+    "access_level": "etudiant",
+    "rag_readiness": "faible",
+    "rag_suitable": true,
+    "preprocessing_needed": true,
+    "preprocessing_notes": "Extraire uniquement le corps de l'email — retirer From/To/Date, URLs, signatures",
+    "test_case": {
+      "question": "Comment fonctionne le processus de réinscription ?",
+      "expected_behavior": "answer_with_source",
+      "source_doc_id": "DOC004"
+    }
+  },
+  {
+    "id": "DOC005",
+    "titre": "Email — Validation attestation de présence et diplôme",
+    "type": "email",
+    "source": "Messagerie SESAME - Informations importantes – Validation de l'attestation de présence et du diplôme.pdf",
+    "filiere": null,
+    "access_level": "etudiant",
+    "rag_readiness": "faible",
+    "rag_suitable": true,
+    "preprocessing_needed": true,
+    "preprocessing_notes": "Extraire le corps utile — contient du texte arabe, retirer entêtes et signatures",
+    "test_case": {
+      "question": "Comment obtenir une attestation de présence ?",
+      "expected_behavior": "answer_with_source",
+      "source_doc_id": "DOC005"
+    }
+  }
+]

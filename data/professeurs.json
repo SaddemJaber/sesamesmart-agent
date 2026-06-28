@@ -1,0 +1,90 @@
+[
+  {
+    "id": "PROF001",
+    "nom_complet": "Khalid El Mansouri",
+    "departement": "FTA",
+    "matieres_enseignees": [
+      "Administration Systèmes"
+    ],
+    "disponibilite": "Mardi-Jeudi",
+    "bio_prof": "Enseignant en Administration Systèmes au département FTA.",
+    "email": "khalid.el.mansouri@sesame.ma"
+  },
+  {
+    "id": "PROF002",
+    "nom_complet": "Layla Bensouda",
+    "departement": "ING",
+    "matieres_enseignees": [
+      "Algorithmique"
+    ],
+    "disponibilite": "Lundi-Mercredi",
+    "bio_prof": "Enseignant en Algorithmique au département ING.",
+    "email": "layla.bensouda@sesame.ma"
+  },
+  {
+    "id": "PROF003",
+    "nom_complet": "Hassan Rifai",
+    "departement": "MANAGEMENT",
+    "matieres_enseignees": [
+      "Gestion de Projet"
+    ],
+    "disponibilite": "Sur RDV",
+    "bio_prof": "Enseignant en Gestion de Projet au département MANAGEMENT.",
+    "email": "hassan.rifai@sesame.ma"
+  },
+  {
+    "id": "PROF004",
+    "nom_complet": "Nadia Ouazzani",
+    "departement": "FTA",
+    "matieres_enseignees": [
+      "Sécurité Informatique"
+    ],
+    "disponibilite": "Mardi-Jeudi",
+    "bio_prof": "Enseignant en Sécurité Informatique au département FTA.",
+    "email": "nadia.ouazzani@sesame.ma"
+  },
+  {
+    "id": "PROF005",
+    "nom_complet": "Youssef Tahiri",
+    "departement": "ING",
+    "matieres_enseignees": [
+      "Mathématiques Appliquées"
+    ],
+    "disponibilite": "Sur RDV",
+    "bio_prof": "Enseignant en Mathématiques Appliquées au département ING.",
+    "email": "youssef.tahiri@sesame.ma"
+  },
+  {
+    "id": "PROF006",
+    "nom_complet": "Amina Bouzid",
+    "departement": "MANAGEMENT",
+    "matieres_enseignees": [
+      "Marketing Digital"
+    ],
+    "disponibilite": "Mardi-Jeudi",
+    "bio_prof": "Enseignant en Marketing Digital au département MANAGEMENT.",
+    "email": "amina.bouzid@sesame.ma"
+  },
+  {
+    "id": "PROF007",
+    "nom_complet": "Rachid Hajji",
+    "departement": "FTA",
+    "matieres_enseignees": [
+      "Sécurité Informatique"
+    ],
+    "disponibilite": "Mardi-Jeudi",
+    "bio_prof": "Enseignant en Sécurité Informatique au département FTA.",
+    "email": "rachid.hajji@sesame.ma"
+  },
+  {
+    "id": "PROF008",
+    "nom_complet": "Samira Benkirane",
+    "departement": "ING",
+    "matieres_enseignees": [
+      "Mathématiques Appliquées"
+    ],
+    "disponibilite": "Mardi-Jeudi",
+    "bio_prof": "Enseignant en Mathématiques Appliquées au département ING.",
+    "email": "samira.benkirane@sesame.ma"
+  }
+]
