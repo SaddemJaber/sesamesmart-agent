@@ -323,3 +323,55 @@ Endpoint : https://generativelanguage.googleapis.com/v1beta/models/gemini-embedd
 Cause : index ivfflat avec lists=10 nécessite au moins 10 lignes dans la table.
 Solution pendant le développement : DROP INDEX IF EXISTS document_chunks_embedding_idx;
 À recréer en production avec suffisamment de données.
+
+---
+
+## Task 4 — Ingestion RAG
+
+### T4-1 : 401 Unauthorized sur embeddings
+**Symptôme :** `401 Unauthorized` sur `gemini-embedding-001:embedContent`
+**Cause :** Mauvaise clé API (deux clés créées sur AI Studio, l'une invalide)
+**Fix :** Vérifier `.env` → utiliser la clé `AQ.Ab8RN6JG0Gt...`
+**Prévention :** Tester la clé avec un appel minimal curl/python avant ingestion
+
+### T4-2 : ConnectionError / Timeout Gemini API
+**Symptôme :** `requests.exceptions.ConnectionError` sur tout appel Gemini
+**Cause :** Réseau école filtre `generativelanguage.googleapis.com`
+**Fix :** Activer hotspot téléphone avant tout appel Gemini
+**Contrainte permanente :** WiFi école = Supabase OK, Gemini KO
+
+### T4-3 : Chunks parasites depuis PDF PPT→PDF
+**Symptôme :** Chunks contenant `[Visual Elements]`, `[Image: logo]`, `[Slide layout]`
+**Cause :** pdfplumber extrait les descriptions d'éléments visuels des PPT convertis
+**Fix :** Pré-traitement regex pour retirer toutes les balises `[...]`
+
+### T4-4 : Emails PDF — entêtes et signatures dans les chunks
+**Symptôme :** Top chunks = "De: noreply@sesame.ma", URLs tracking, "Cordialement"
+**Cause :** Ingestion brute du PDF email complet
+**Fix :** Extraire uniquement le corps (entre salutation et signature)
+
+---
+
+## Task 5 — Cerveau du Chatbot
+
+### T5-1 : 404 sur gemini-1.5-flash:generateContent
+**Symptôme :** `404 Client Error: Not Found for url: .../gemini-1.5-flash:generateContent`
+**Cause :** `gemini-1.5-flash` déprécié/absent sur cet endpoint en juin 2026
+**Diagnostic :** `GET https://generativelanguage.googleapis.com/v1beta/models` + header `x-goog-api-key`
+**Fix :** Utiliser `models/gemini-2.5-flash` dans `GEN_URL`
+**Modèles flash disponibles :** gemini-2.5-flash, gemini-2.0-flash, gemini-2.0-flash-lite, gemini-3.5-flash
+
+### T5-2 : Abstention ne se déclenche pas (SEUIL_BAS trop bas)
+**Symptôme :** Question hors corpus → `should_generate=True`, score=0.524
+**Cause :** `SEUIL_BAS=0.50` < score parasite max (0.524) sur corpus de 9 chunks
+**Fix :** `SEUIL_BAS = 0.55`
+**Règle :** Calibrer empiriquement — tester avec 2-3 questions hors corpus, relever le score max, fixer le seuil 5 points au-dessus.
+
+### T5-3 : Intent professeur → not_found avec matière générique
+**Symptôme :** `handle_sql('professeur_matiere', {'matiere': 'Mathématiques'}, ...)` → error=not_found
+**Cause :** `.contains()` = match exact sur élément TEXT[]. "Mathématiques" ≠ "Mathématiques Appliquées"
+**Fix :** Utiliser la valeur exacte du tableau (`matieres_enseignees`) dans les tests et dans le routeur
+
+---
+
+**Dernière mise à jour :** 29 juin 2026

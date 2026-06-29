@@ -804,42 +804,144 @@ Stack RAG fonctionnelle de bout en bout.
 
 ---
 
-## Tâche 4 — Prétraitement et Ingestion (VALIDÉE)
+## 📋 Tâche 4 — Pré-traitement & Ingestion RAG ✅
 
-### Décision de prétraitement
-Les 3 documents de faible qualité RAG (Charte PPT→PDF, emails) remplacés par des fichiers .txt propres rédigés manuellement. Les 2 bons documents (KONOSYS, RI FTA) ont aussi été convertis en .txt après problèmes d'encodage Windows avec les noms de fichiers accentués.
-
-### Résultat ingestion
-- 5 documents → 9 chunks dans Supabase
-- DOC001 (KONOSYS) : 2 chunks
-- DOC002 (RI FTA) : 3 chunks
-- DOC003 (Charte) : 2 chunks
-- DOC004 (Email réinscription) : 1 chunk
-- DOC005 (Email attestation) : 1 chunk
-- Embedding : gemini-embedding-001, 768d, RETRIEVAL_DOCUMENT
-- Script idempotent : DELETE avant INSERT à chaque exécution
+**Date :** 29 juin 2026
+**Statut :** ✅ Complète — 9 chunks insérés, Spike RAG validé
 
 ### Fichiers créés
-- data/corpus/doc001_konosys.txt
-- data/corpus/doc002_ri_fta.txt
-- data/corpus/doc003_charte.txt
-- data/corpus/doc004_reinscription.txt
-- data/corpus/doc005_attestation.txt
-- scripts/ingest_corpus.py
 
-### Prochaine étape : Task 5 — Cerveau du chatbot
-- app/router.py : routeur déterministe (mots-clés SQL vs RAG)
-- app/sql_handler.py : 3 requêtes SQL fixes
-- app/rag_handler.py : retrieve + generate (gemini-1.5-flash)
-- app/response_builder.py : format JSON + abstention 2 niveaux
+| Fichier | Rôle | Statut |
+|---|---|---|
+| `data/corpus/doc001_konosys.txt` | Note KONOSYS nettoyée | ✅ |
+| `data/corpus/doc002_ri_fta.txt` | Règlement FTA nettoyé | ✅ |
+| `data/corpus/doc003_charte.txt` | Charte (balises PPT retirées) | ✅ |
+| `data/corpus/doc004_reinscription.txt` | Email (corps extrait) | ✅ |
+| `data/corpus/doc005_attestation.txt` | Email (corps extrait) | ✅ |
+| `scripts/ingest_corpus.py` | Ingestion chunks → Supabase | ✅ |
+
+### Résultat ingestion
+
+```
+9 chunks insérés dans Supabase (table document_chunks) :
+- DOC001 : 2 chunks
+- DOC002 : 3 chunks
+- DOC003 : 2 chunks
+- DOC004 : 1 chunk
+- DOC005 : 1 chunk
+```
+
+### Paramètres techniques
+
+- **Embeddings :** `gemini-embedding-001` via REST v1beta
+- **Auth :** header `x-goog-api-key` (pas Bearer, pas ?key=)
+- **Dimensions :** `outputDimensionality=768` — assertion `len(emb)==768` avant chaque INSERT
+- **taskType ingestion :** `RETRIEVAL_DOCUMENT`
+- **Chunking :** structurel par section, fallback fixe, taille cible 500-1000 tokens
+- **Index ivfflat :** supprimé après ingestion (trop peu de vecteurs pour l'index) — à recréer après Task 6
+
+### Spike RAG — Test de vérité binaire
+
+**Question :** "Comment contester une absence sur KONOSYS ?"
+**Résultat :** Top-1 chunk = DOC001, similarité > 0.65 ✅
+**Conclusion :** Pipeline embed → pgvector → retrieval fonctionnel
+
+### Problèmes rencontrés — Task 4
+
+**Problème T4-1 : Mauvaise clé API (clé _Iax_ vs clé JG0Gt)**
+- Symptôme : `401 Unauthorized` sur l'endpoint embeddings
+- Cause : Deux clés API Gemini créées sur AI Studio. La clé `_Iax_` était invalide pour cet endpoint
+- Fix : Utiliser la clé `AQ.Ab8RN6JG0Gt...` (confirmée fonctionnelle)
+- Leçon : Toujours tester la clé avec un appel minimal avant de lancer l'ingestion complète
+
+**Problème T4-2 : Réseau WiFi école bloque l'API Gemini**
+- Symptôme : `ConnectionError` / timeout sur tous les appels Gemini
+- Cause : Le réseau de l'école filtre les requêtes vers `generativelanguage.googleapis.com`
+- Fix : Utiliser le **hotspot téléphone** pour tous les appels Gemini
+- Contrainte permanente : hotspot obligatoire pour toute opération Gemini (embeddings + génération)
+
+**Problème T4-3 : Charte étudiant (PPT→PDF) — balises parasites**
+- Symptôme : Chunks contenant `[Visual Elements]`, `[Image: ...]`, mise en page PPT
+- Cause : Extraction PDF d'une présentation PowerPoint — les éléments visuels génèrent du texte parasite
+- Fix : Pré-traitement pour retirer toutes les balises `[Visual Elements]` et `[Image: ...]`
+- Leçon : Les fichiers PPT→PDF nécessitent un nettoyage obligatoire avant ingestion RAG
+
+**Problème T4-4 : Emails (PDF) — entêtes et signatures polluent les chunks**
+- Symptôme : Chunks contenant `De:`, `À:`, URLs de tracking Gmail, signatures
+- Cause : PDFs d'emails contiennent entêtes Gmail + corps + signatures — tout est extrait
+- Fix : Extraire uniquement le corps utile (entre salutation et signature)
+- Leçon : PDFs d'emails = extraction sélective obligatoire, pas ingestion brute
 
 ---
 
----
+## 📋 Tâche 5 — Cerveau du Chatbot ✅
 
-**Fin de Tâche 1 ✅**  
-**Fin de Tâche 2 ✅**  
-**Fin de Tâche 3 ✅**  
-**Début Tâche 4 ⏳**  
-**Auteur :** SaddemJaber  
-**Dernière mise à jour :** 28 juin 2026
+**Date :** 29 juin 2026
+**Statut :** ✅ Complète — 57/57 tests passés
+
+### Fichiers créés
+
+| Fichier | Rôle | Tests |
+|---|---|---|
+| `app/router.py` | Routeur déterministe zéro LLM | 10/10 ✅ |
+| `app/sql_handler.py` | 3 requêtes SQL paramétrées fixes | 9/9 ✅ |
+| `app/rag_handler.py` | Pipeline RAG embed→retrieve→generate | 14/14 ✅ |
+| `app/response_builder.py` | Format JSON unifié + abstention 2 niveaux | 24/24 ✅ |
+| `tests/test_router.py` | Tests routeur | ✅ |
+| `tests/test_sql_handler.py` | Tests SQL handler | ✅ |
+| `tests/test_rag_handler.py` | Tests RAG handler | ✅ |
+| `tests/test_response_builder.py` | Tests response builder | ✅ |
+
+### Architecture — Constantes verrouillées
+
+```python
+GEN_MODEL            = "models/gemini-2.5-flash"   # vérifié 29/06/2026
+SIMILARITY_THRESHOLD = 0.65
+SEUIL_HAUT           = 0.65   # score ≥ 0.65 → réponse normale
+SEUIL_BAS            = 0.55   # calibré empiriquement (voir T5-2)
+                               # score 0.55–0.65 → réponse partielle
+                               # score < 0.55   → abstention
+```
+
+### SQL Intents (3 requêtes fixes, zéro text-to-SQL)
+
+```sql
+-- Intent: moyenne
+SELECT moyenne_generale FROM etudiants WHERE email = :email
+
+-- Intent: statut_financier
+SELECT statut_financier FROM etudiants WHERE email = :email
+
+-- Intent: professeur_matiere
+SELECT nom_complet FROM professeurs WHERE matieres_enseignees @> ARRAY[:matiere]
+```
+
+### Problèmes rencontrés — Task 5
+
+**Problème T5-1 : gemini-1.5-flash → 404 Not Found**
+- Symptôme : `404 Client Error: Not Found for url: .../gemini-1.5-flash:generateContent`
+- Couche : L3 Configuration (pas L2 Auth — les embeddings fonctionnaient déjà)
+- Diagnostic : `GET /v1beta/models` → liste des 50 modèles disponibles
+- Découverte : `gemini-1.5-flash` absent de la liste (déprécié/retiré sur cet endpoint)
+  Modèles flash disponibles : `gemini-2.5-flash`, `gemini-2.0-flash`, `gemini-2.0-flash-lite`, `gemini-3-flash-preview`, `gemini-3.5-flash`
+- Fix : Remplacer `gemini-1.5-flash` par `models/gemini-2.5-flash` dans `rag_handler.py`
+- Leçon : **Ne jamais supposer un nom de modèle.** Toujours vérifier via `GET /v1beta/models` avant de coder.
+
+**Problème T5-2 : Calibration SEUIL_BAS — abstention ne se déclenchait pas**
+- Symptôme : Question "Quelle est la recette du couscous royal ?" → `should_generate=True`, `score=0.524`
+- Cause : `SEUIL_BAS=0.50`. Avec seulement 9 chunks, pgvector retourne les "moins mauvais" même pour une question hors corpus (score parasite max observé = 0.524)
+- Fix : Remonter `SEUIL_BAS` de `0.50` à `0.55`
+- Leçon : Le seuil d'abstention doit être **calibré empiriquement sur le corpus réel**. Avec N chunks faible, la similarité "parasite" peut dépasser le seuil théorique.
+
+**Problème T5-3 : Test sql_handler.py — matière "Mathématiques" → not_found**
+- Symptôme : Intent `professeur_matiere` avec matière "Mathématiques" → `error=not_found`
+- Cause : La vraie valeur dans Supabase est "Mathématiques Appliquées". Le filtre `.contains()` fait un match exact sur l'élément du tableau TEXT[].
+- Fix : Corriger le test pour utiliser "Algorithmique" (valeur exacte dans `professeurs.json`)
+- Leçon : Les tests doivent utiliser les valeurs de données réelles, pas des suppositions.
+
+### Découvertes techniques
+
+1. **Pattern extraction défensive Gemini 2.5 Flash** — La réponse peut retourner `candidates[0].content` sans `parts.text` si `finishReason=MAX_TOKENS`. Toujours utiliser une extraction avec fallback string.
+2. **Architecture déterministe validée** — Routeur zéro LLM (regex) : 10/10 tests dont 4 cas-pièges (questions documentaires qui contiennent des mots SQL). Ordre d'évaluation critique : `moyenne → statut → professeur → RAG (défaut)`.
+3. **Calibration empirique du seuil** — Question pertinente (KONOSYS) : similarité top-1 > 0.70. Question hors corpus (couscous) : max 0.524. Fenêtre libre → SEUIL_BAS=0.55 robuste sur ce corpus.
+4. **`confidence` calculé par le code, jamais par le LLM** — Mapping depuis le score : `≥0.65 → "high"`, `0.55–0.65 → "partial"`, `<0.55 → "none"`.
