@@ -760,6 +760,83 @@ git log --oneline
 
 ---
 
+## Tâche 3 — Supabase (VALIDÉE)
+
+### Ce qui a été fait
+- Projet Supabase créé et configuré
+- Extension pgvector activée
+- 5 tables créées : etudiants, professeurs, documents, document_chunks, requetes_frequentes
+- Colonne embedding : vector(768) sur document_chunks UNIQUEMENT
+- RLS activé sur toutes les tables avec policies lecture/insertion
+- Seed chargé : 20 étudiants, 8 professeurs, 5 documents
+- Connexion vérifiée via verify_supabase.py
+- Fonction SQL match_chunks(query_embedding vector(768), match_count int) créée
+
+### Problèmes rencontrés et solutions
+- Policies déjà existantes → DROP POLICY IF EXISTS avant recréation
+- Index ivfflat supprimé (lists=10 incompatible avec peu de données) → à recréer après ingestion complète
+
+### Fichiers créés
+- scripts/create_schema.sql
+- scripts/seed_supabase.py
+- scripts/verify_supabase.py
+- scripts/enable_rls_final.sql
+
+---
+
+## Spike RAG (VALIDÉ)
+
+### Résultat
+Stack RAG fonctionnelle de bout en bout.
+- Embedding : gemini-embedding-001, 768 dimensions, REST v1beta
+- Auth : header x-goog-api-key (PAS Bearer, PAS ?key= dans URL)
+- Insertion Supabase : document_chunks avec embedding vector(768)
+- Retrieval : match_chunks RPC, top-1 = DOC001, similarité cosine = 0.818
+
+### Problèmes rencontrés et solutions
+- text-embedding-004 : modèle déprécié/retiré → remplacé par gemini-embedding-001
+- Timeout réseau : WiFi école bloque generativelanguage.googleapis.com → utiliser hotspot téléphone
+- Clé API : deux clés différentes dans .env vs curl → vérifier avec repr() que la bonne clé est dans .env
+- Index ivfflat avec 1 chunk : retourne 0 résultats → DROP INDEX, scan séquentiel
+
+### Fichiers créés
+- scripts/spike_rag.py
+
+---
+
+## Tâche 4 — Prétraitement et Ingestion (VALIDÉE)
+
+### Décision de prétraitement
+Les 3 documents de faible qualité RAG (Charte PPT→PDF, emails) remplacés par des fichiers .txt propres rédigés manuellement. Les 2 bons documents (KONOSYS, RI FTA) ont aussi été convertis en .txt après problèmes d'encodage Windows avec les noms de fichiers accentués.
+
+### Résultat ingestion
+- 5 documents → 9 chunks dans Supabase
+- DOC001 (KONOSYS) : 2 chunks
+- DOC002 (RI FTA) : 3 chunks
+- DOC003 (Charte) : 2 chunks
+- DOC004 (Email réinscription) : 1 chunk
+- DOC005 (Email attestation) : 1 chunk
+- Embedding : gemini-embedding-001, 768d, RETRIEVAL_DOCUMENT
+- Script idempotent : DELETE avant INSERT à chaque exécution
+
+### Fichiers créés
+- data/corpus/doc001_konosys.txt
+- data/corpus/doc002_ri_fta.txt
+- data/corpus/doc003_charte.txt
+- data/corpus/doc004_reinscription.txt
+- data/corpus/doc005_attestation.txt
+- scripts/ingest_corpus.py
+
+### Prochaine étape : Task 5 — Cerveau du chatbot
+- app/router.py : routeur déterministe (mots-clés SQL vs RAG)
+- app/sql_handler.py : 3 requêtes SQL fixes
+- app/rag_handler.py : retrieve + generate (gemini-1.5-flash)
+- app/response_builder.py : format JSON + abstention 2 niveaux
+
+---
+
+---
+
 **Fin de Tâche 1 ✅**  
 **Fin de Tâche 2 ✅**  
 **Fin de Tâche 3 ✅**  

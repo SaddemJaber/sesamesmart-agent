@@ -1,0 +1,27 @@
+NOTE DE SERVICE - UNIVERSITÉ SESAME
+Objet : Gestion et validation des absences étudiantes sur KONOSYS
+
+La présente note a pour objet de préciser les procédures relatives à la gestion des absences sur la plateforme KONOSYS.
+
+1. SIGNALEMENT DES ABSENCES
+Les absences sont enregistrées automatiquement par les enseignants sur KONOSYS dans les 24 heures suivant le cours. L'étudiant reçoit une notification par email dès qu'une absence est enregistrée.
+
+2. CONSULTATION DES ABSENCES
+L'étudiant peut consulter ses absences via son espace personnel KONOSYS, rubrique "Mes absences". Le récapitulatif est mis à jour en temps réel.
+
+3. CONTESTATION D'UNE ABSENCE
+Pour contester une absence, l'étudiant doit :
+- Se connecter à KONOSYS dans un délai de 5 jours ouvrables suivant l'absence
+- Accéder à la rubrique "Contestation"
+- Remplir le formulaire de contestation en joignant les justificatifs nécessaires
+- Soumettre la demande pour validation par le responsable pédagogique
+Toute contestation soumise hors délai ne sera pas prise en compte.
+
+4. TRAITEMENT DES CONTESTATIONS
+Les contestations sont traitées sous 72 heures ouvrables par le service de scolarité. Une notification est envoyée à l'étudiant après décision. En cas de validation, l'absence est retirée du compteur.
+
+5. ABSENCES JUSTIFIÉES
+Les justificatifs acceptés sont : certificat médical, convocation officielle, circonstance exceptionnelle validée par l'administration. Le justificatif doit être déposé au service de scolarité ou joint au formulaire KONOSYS.
+
+6. SEUIL D'ABSENCE
+Le taux d'absence ne doit pas dépasser 30% du volume horaire par module. Au-delà de ce seuil, l'étudiant est déclaré défaillant et ne peut pas se présenter à l'examen final du module concerné.

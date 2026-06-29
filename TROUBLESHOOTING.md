@@ -297,3 +297,29 @@ A: Techniquement oui, mais NON. Le venv c'est pour que le jury puisse reproduire
 
 **Q: Je peux utiliser Git Bash au lieu de PowerShell ?**
 A: Oui, Git Bash a git natif. Mais PowerShell c'est plus moderne.
+
+---
+
+## Problèmes API Gemini
+
+### Erreur 404 sur text-embedding-004
+Cause : modèle déprécié et retiré.
+Solution : utiliser gemini-embedding-001 à la place.
+
+### Timeout sur generativelanguage.googleapis.com
+Cause : réseau WiFi école/entreprise bloque le domaine Google.
+Solution : passer sur hotspot téléphone mobile.
+
+### Erreur 403 Forbidden
+Cause : mauvaise clé dans .env (il peut y avoir plusieurs clés dans Google AI Studio).
+Diagnostic : .\venv\Scripts\python.exe -c "import os; from dotenv import load_dotenv; load_dotenv(); key = os.getenv('GEMINI_API_KEY'); print(repr(key))"
+Solution : vérifier que la clé dans .env correspond exactement à celle testée dans le curl quickstart.
+
+### Auth correcte pour clés AQ.Ab8R...
+Header : x-goog-api-key (PAS Authorization: Bearer, PAS ?key= dans l'URL)
+Endpoint : https://generativelanguage.googleapis.com/v1beta/models/gemini-embedding-001:embedContent
+
+### Index ivfflat retourne 0 résultats
+Cause : index ivfflat avec lists=10 nécessite au moins 10 lignes dans la table.
+Solution pendant le développement : DROP INDEX IF EXISTS document_chunks_embedding_idx;
+À recréer en production avec suffisamment de données.
