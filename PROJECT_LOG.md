@@ -945,3 +945,121 @@ SELECT nom_complet FROM professeurs WHERE matieres_enseignees @> ARRAY[:matiere]
 2. **Architecture déterministe validée** — Routeur zéro LLM (regex) : 10/10 tests dont 4 cas-pièges (questions documentaires qui contiennent des mots SQL). Ordre d'évaluation critique : `moyenne → statut → professeur → RAG (défaut)`.
 3. **Calibration empirique du seuil** — Question pertinente (KONOSYS) : similarité top-1 > 0.70. Question hors corpus (couscous) : max 0.524. Fenêtre libre → SEUIL_BAS=0.55 robuste sur ce corpus.
 4. **`confidence` calculé par le code, jamais par le LLM** — Mapping depuis le score : `≥0.65 → "high"`, `0.55–0.65 → "partial"`, `<0.55 → "none"`.
+---
+
+**Fin de Tâche 1 ✅**
+**Fin de Tâche 2 ✅**
+**Fin de Tâche 3 ✅**
+**Fin de Tâche 4 ✅**
+**Fin de Tâche 5 ✅**
+**Fin de Tâche 6 ✅**
+**Fin de Tâche 7 ✅**
+**Début Tâche 8 ⏳**
+**Auteur :** SaddemJaber
+**Dernière mise à jour :** 30 juin 2026
+
+---
+
+## 📋 Tâche 6 — API Flask ✅
+
+**Date de validation :** 30 juin 2026
+**Fichier principal :** `app/main.py`
+**Tests :** `tests/test_main.py` → **24/24 passés**
+
+### Endpoints
+
+| Endpoint | Méthode | Description |
+|---|---|---|
+| `/health` | GET | Vérification que le serveur tourne |
+| `/api/chat` | POST | Point d'entrée unique du chatbot |
+
+### Format /api/chat
+
+**Entrée :**
+```json
+{"question": "...", "user_email": "..."}
+```
+
+**Sortie :**
+```json
+{
+  "reponse": "...",
+  "sources": ["..."],
+  "suggestions": ["...", "..."],
+  "confidence": "high | partial | none"
+}
+```
+
+### Tests validés (24/24)
+
+| Test | Résultat |
+|---|---|
+| Health check `/health` | ✅ 200 |
+| Corps vide → 400 | ✅ |
+| Question vide → 400 | ✅ |
+| Email vide → 400 | ✅ |
+| SQL — ma moyenne | ✅ confidence=high, contient /20 |
+| SQL — statut financier | ✅ confidence=high |
+| SQL — professeur (Bensouda) | ✅ confidence=high |
+| RAG documentaire | ✅ confidence ∈ {high,partial}, sources non vides |
+| Abstention hors corpus | ✅ confidence=none, sources=[] |
+| Sécurité email inconnu | ✅ confidence=none, refus |
+
+### Lancer l'application
+
+```bash
+# Terminal 1 — serveur
+.\venv\Scripts\python.exe -m app.main
+
+# Terminal 2 — tests d'intégration
+.\venv\Scripts\python.exe tests/test_main.py
+```
+
+---
+
+## 📋 Tâche 7 — Scénarios Jury ✅
+
+**Date de validation :** 30 juin 2026
+**Fichier de tests :** `tests/test_demo_jury.py`
+**Résultat :** 18/18 tests passés — 5/5 scénarios OK
+
+### Les 5 scénarios jury
+
+| # | Scénario | Question testée | Comportement attendu | Résultat |
+|---|---|---|---|---|
+| 1 | RAG documentaire pur | Question sur réinscription/absences | confidence != none, sources non vides | ✅ |
+| 2 | SQL données personnelles | "Quelle est ma moyenne ?" | confidence=high, source=base académique | ✅ |
+| 3 | Abstention stricte | Question totalement hors corpus | confidence=none, sources=[] | ✅ |
+| 4 | Document bruité/partiel | Question sur email ou charte PPT | HTTP 200, réponse présente | ✅ |
+| 5 | Sécurité & confidentialité | Email inconnu ou non autorisé | confidence=none, sources=[] | ✅ |
+
+### Bugs résolus
+
+**Bug scénario 3 :** La question de test initiale était trop proche sémantiquement du corpus → le retrieval ramenait des chunks → pas d'abstention.
+Fix : Remplacée par une question sans lien avec Sesame (recette de cuisine).
+
+**Bug scénario 4 :** Timeout SSL sur `generativelanguage.googleapis.com` → Flask retournait 500.
+Fix : Résolu en utilisant le hotspot mobile au lieu du WiFi école.
+
+### Lancer les scénarios jury
+
+```bash
+# Terminal 1 — serveur Flask obligatoire
+.\venv\Scripts\python.exe -m app.main
+
+# Terminal 2 — scénarios jury
+.\venv\Scripts\python.exe tests/test_demo_jury.py
+```
+
+### Statistiques finales Tasks 1→7
+
+| Task | Description | Status |
+|---|---|---|
+| 1 | Environnement & repo | ✅ |
+| 2 | Mock data | ✅ |
+| 3 | Supabase + pgvector | ✅ |
+| 4 | Pré-traitement & ingestion RAG | ✅ 9 chunks |
+| 5 | Cerveau chatbot (router + SQL + RAG) | ✅ 57/57 tests |
+| 6 | API Flask | ✅ 24/24 tests |
+| 7 | Scénarios jury | ✅ 18/18 tests |
+| 8 | Démo & rapport | ⏳ En cours |

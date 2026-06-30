@@ -375,3 +375,43 @@ Solution pendant le développement : DROP INDEX IF EXISTS document_chunks_embedd
 ---
 
 **Dernière mise à jour :** 29 juin 2026
+---
+
+## Tasks 6 & 7 — Problèmes résolus
+
+### T6-1 : ModuleNotFoundError 'app'
+**Symptôme :**
+```
+ModuleNotFoundError: No module named 'app'
+```
+**Cause :** Lancer `python app/main.py` au lieu de `python -m app.main`
+**Fix :**
+```bash
+# ❌ Ne pas faire
+python app/main.py
+
+# ✅ Faire
+.\venv\Scripts\python.exe -m app.main
+```
+**Explication :** `-m` indique à Python de résoudre les imports relatifs depuis la racine du projet.
+
+### T7-1 : Scénario 3 — Abstention non déclenchée
+**Symptôme :** `confidence=high` sur une question censée déclencher l'abstention.
+**Cause :** La question de test était sémantiquement proche du corpus Sesame → le retrieval ramenait des chunks → score > seuil → pas d'abstention.
+**Fix :** Utiliser une question sans lien avec l'école, les étudiants, ou les règlements (ex : question de cuisine, météo, sport).
+**Règle :** Pour tester l'abstention, la question doit être dans un domaine totalement différent du corpus.
+
+### T7-2 : Scénario 4 — Timeout SSL / 500
+**Symptôme :**
+```
+TimeoutError: _ssl.c:983: The handshake operation timed out
+requests.exceptions.ReadTimeout: HTTPSConnectionPool(host='generativelanguage.googleapis.com', port=443)
+→ Flask 500
+```
+**Cause :** Le réseau WiFi école bloque les connexions vers `generativelanguage.googleapis.com`.
+**Fix :** Utiliser le hotspot mobile pour tous les appels Gemini API.
+**Réseau requis :** Hotspot téléphone obligatoire — le WiFi école ne permet pas les appels vers l'API Gemini.
+
+---
+
+**Dernière mise à jour :** 30 juin 2026

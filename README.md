@@ -1,93 +1,82 @@
 # SesameSmart — Chatbot académique hybride (SQL + RAG)
 
-POC d'un assistant étudiant pour Sesame.
-- Backend : Flask + Supabase (pgvector)
-- IA : Google Gemini (gemini-embedding-001, models/gemini-2.5-flash)
-- Architecture : routeur déterministe SQL / RAG + abstention stricte
+POC d'un assistant étudiant pour l'école Sesame.
 
----
+## Stack technique
 
-## Statut du projet
+| Composant | Technologie |
+|---|---|
+| Backend | Flask (Python) |
+| Base de données | Supabase + pgvector |
+| Embeddings | Google Gemini `gemini-embedding-001` (REST, 768d) |
+| Génération | Google Gemini `gemini-2.5-flash` (REST) |
+| Architecture | Routeur unique : SQL ou RAG + abstention stricte |
 
-```
-Tasks complètes : 1 ✅ 2 ✅ 3 ✅ 4 ✅ 5 ✅
-En cours        : Task 6 — API Flask (app/main.py)
-```
-
----
-
-## Structure du projet
+## Architecture
 
 ```
-sesamesmart-agent/
-├── app/
-│   ├── __init__.py
-│   ├── router.py           # Routeur déterministe (SQL vs RAG)
-│   ├── sql_handler.py      # 3 requêtes SQL paramétrées
-│   ├── rag_handler.py      # Pipeline RAG embed→retrieve→generate
-│   └── response_builder.py # Format JSON unifié + abstention
-├── data/
-│   ├── corpus/             # 5 documents .txt nettoyés (DOC001–DOC005)
-│   ├── etudiants.json
-│   ├── professeurs.json
-│   └── documents_metadata.json
-├── scripts/
-│   ├── create_schema.sql
-│   ├── seed_supabase.py
-│   ├── ingest_corpus.py
-│   └── spike_rag.py
-├── tests/
-│   ├── test_router.py
-│   ├── test_sql_handler.py
-│   ├── test_rag_handler.py
-│   └── test_response_builder.py
-├── .env.example
-├── requirements.txt
-├── PROJECT_LOG.md
-└── TROUBLESHOOTING.md
+Question étudiant
+       ↓
+Routeur déterministe
+      /      \
+    SQL       RAG
+(données    (corpus
+personnelles) documentaire)
+      \      /
+   Réponse JSON
+{reponse, sources, suggestions, confidence}
 ```
 
----
+## Lancer le projet
+
+```bash
+# 1. Activer l'environnement
+.\venv\Scripts\activate
+
+# 2. Installer les dépendances
+pip install -r requirements.txt
+
+# 3. Configurer les variables d'environnement
+cp .env.example .env
+# Remplir SUPABASE_URL, SUPABASE_KEY, GEMINI_API_KEY
+
+# 4. Lancer le serveur
+.\venv\Scripts\python.exe -m app.main
+```
+
+## Tests
+
+```bash
+# Tests d'intégration Flask (24/24)
+.\venv\Scripts\python.exe tests/test_main.py
+
+# Scénarios jury (18/18)
+.\venv\Scripts\python.exe tests/test_demo_jury.py
+```
 
 ## Variables d'environnement
 
-Copier `.env.example` → `.env` et remplir :
+Voir `.env.example` pour la liste complète :
 
 ```env
-SUPABASE_URL=https://<project>.supabase.co
-SUPABASE_KEY=<anon_key>
-GEMINI_API_KEY=...   # Clé AI Studio (format AQ.Ab8R...)
-                     # ⚠️ Utiliser hotspot téléphone — WiFi école bloque Gemini
+SUPABASE_URL=https://xxx.supabase.co
+SUPABASE_KEY=sb_publishable_...
+GEMINI_API_KEY=AQ...
 ```
 
----
+## Statut du projet
 
-## Installation
+| Task | Description | Status |
+|---|---|---|
+| 1 | Environnement & repo | ✅ |
+| 2 | Mock data (20 étudiants, 8 profs, 5 docs) | ✅ |
+| 3 | Supabase + pgvector + seed | ✅ |
+| 4 | Pré-traitement & ingestion RAG (9 chunks) | ✅ |
+| 5 | Cerveau chatbot (routeur + SQL + RAG) | ✅ |
+| 6 | API Flask — 24/24 tests | ✅ |
+| 7 | Scénarios jury — 18/18 tests | ✅ |
+| 8 | Démo & rapport | ⏳ |
 
-```bash
-python -m venv venv
-.\venv\Scripts\python.exe -m pip install -r requirements.txt
-```
+## ⚠️ Réseau
 
----
-
-## Commandes de test
-
-```bash
-# Tous les tests Task 5 (zéro réseau sauf test_rag et test_main)
-.\venv\Scripts\python.exe tests/test_router.py
-.\venv\Scripts\python.exe tests/test_sql_handler.py
-.\venv\Scripts\python.exe tests/test_rag_handler.py   # hotspot requis
-.\venv\Scripts\python.exe tests/test_response_builder.py
-```
-
----
-
-## Ingestion RAG
-
-```bash
-# Hotspot téléphone obligatoire
-.\venv\Scripts\python.exe scripts/ingest_corpus.py
-```
-
-9 chunks dans Supabase (DOC001:2, DOC002:3, DOC003:2, DOC004:1, DOC005:1)
+Les appels vers `generativelanguage.googleapis.com` nécessitent un **hotspot mobile** — le WiFi école bloque ces connexions.
