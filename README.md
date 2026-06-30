@@ -54,6 +54,18 @@ copy .env.example .env
 .\venv\Scripts\python.exe tests/test_demo_jury.py
 ```
 
+## Interface chat (CLI)
+
+```bash
+# Terminal 1 — serveur Flask
+.\venv\Scripts\python.exe -m app.main
+
+# Terminal 2 — chat
+.\venv\Scripts\python.exe chat.py
+```
+
+Fonctionnalités : validation email, vérification contre la base, affichage coloré selon confidence, suggestions cliquables (`1`/`2`), `/help`, `/history`.
+
 ## Variables d'environnement
 
 Voir `.env.example` pour la liste complète :
