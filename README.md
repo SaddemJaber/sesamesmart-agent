@@ -37,7 +37,7 @@ personnelles) documentaire)
 pip install -r requirements.txt
 
 # 3. Configurer les variables d'environnement
-cp .env.example .env
+copy .env.example .env
 # Remplir SUPABASE_URL, SUPABASE_KEY, GEMINI_API_KEY
 
 # 4. Lancer le serveur
