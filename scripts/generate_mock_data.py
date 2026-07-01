@@ -39,14 +39,20 @@ PRENOMS = [
     "Ahmed", "Mohamed", "Yassine", "Hamza", "Karim",
     "Ahmed", "Sara", "Fatima", "Nadia", "Zineb",
     "Omar", "Bilal", "Anas", "Ilyas", "Reda",
-    "Mariam", "Hajar", "Dounia", "Salma", "Soufiane"
+    "Mariam", "Hajar", "Dounia", "Salma", "Soufiane",
+    # ETU021–ETU030
+    "Youssef", "Mehdi", "Aya", "Khadija", "Rachid",
+    "Sofia", "Adam", "Lina", "Othmane", "Ghita"
 ]
 
 NOMS = [
     "Bennani", "El Idrissi", "Tazi", "Chraibi", "Alami",
     "Fassi", "Berrada", "Kettani", "Sekkat", "Lahlou",
     "Benali", "Ouali", "Mansouri", "Zouhair", "Hilal",
-    "Cherkaoui", "Benkiran", "El Amrani", "Saidi", "Naciri"
+    "Cherkaoui", "Benkiran", "El Amrani", "Saidi", "Naciri",
+    # ETU021–ETU030
+    "Benjelloun", "Ouahbi", "Slaoui", "Bennis", "El Ghazali",
+    "Bouhalli", "Fahim", "El Khattabi", "Sebti", "Kabbaj"
 ]
 
 FILIERES = ["FTA", "ING", "MANAGEMENT"]
@@ -200,12 +206,14 @@ def generate_documents_metadata() -> list:
 def main():
     print("Génération des données mock SesameSmart...")
 
-    etudiants = generate_etudiants(20)
+    etudiants = generate_etudiants(30)
     with open(OUTPUT_DIR / "etudiants.json", "w", encoding="utf-8") as f:
         json.dump(etudiants, f, ensure_ascii=False, indent=2)
     bloques = sum(1 for e in etudiants if e["statut_financier"] == "BLOQUE")
     print(f"✓ {len(etudiants)} étudiants générés")
     print(f"  → {bloques} BLOQUÉ(s) / {len(etudiants) - bloques} À JOUR")
+
+    random.seed(42)  # re-seed : les 10 nouveaux étudiants consomment la séquence — sans ça, les profs changent
 
     profs = generate_professeurs()
     with open(OUTPUT_DIR / "professeurs.json", "w", encoding="utf-8") as f:
