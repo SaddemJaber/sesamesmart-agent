@@ -1,0 +1,53 @@
+ÉCOLE SESAME — RÈGLEMENT DES EXAMENS
+Référence : RI-SCO-03 — Applicable à tous les étudiants inscrits
+
+=== ADMISSIBILITÉ AUX EXAMENS ===
+
+Un étudiant est admis à passer les examens s'il remplit les deux conditions suivantes :
+1. Son taux de présence en cours est supérieur ou égal à 75% pour chaque matière.
+2. Sa situation financière est à jour (statut A_JOUR dans le système KONOSYS).
+
+Tout étudiant dont le statut financier est BLOQUÉ ne peut pas accéder aux salles d'examen. 
+La régularisation doit être effectuée auprès du service de scolarité au moins 48h avant 
+le début des examens.
+
+=== DÉROULEMENT DES EXAMENS ===
+
+L'étudiant doit se présenter 15 minutes avant le début de l'épreuve.
+La carte d'étudiant valide est obligatoire pour accéder à la salle.
+Tout matériel électronique (téléphone, montre connectée, tablette) doit être éteint 
+et rangé dans le sac avant d'entrer dans la salle.
+Les documents autorisés (notes, formulaires) sont précisés sur le sujet d'examen.
+Il est interdit de quitter la salle pendant les 30 premières minutes de l'épreuve.
+
+=== FRAUDE ET TENTATIVE DE FRAUDE ===
+
+Tout acte de fraude ou tentative de fraude entraîne :
+- La note de 0/20 à l'examen concerné.
+- Un rapport disciplinaire transmis au Conseil de Discipline.
+- Une sanction pouvant aller jusqu'à l'exclusion définitive de l'établissement.
+
+Les formes de fraude incluent : communication entre étudiants, utilisation de documents 
+non autorisés, utilisation d'appareils électroniques, substitution de copie.
+
+=== SESSION DE RATTRAPAGE ===
+
+Un étudiant peut se présenter à la session de rattrapage si sa moyenne générale est 
+inférieure à 10/20 ou s'il a obtenu une note inférieure à 8/20 dans une matière.
+La session de rattrapage se déroule en juillet, 3 semaines après la délibération du jury.
+La note retenue est le maximum entre la note initiale et la note de rattrapage.
+Un étudiant admis en session principale ne peut pas se présenter au rattrapage.
+
+=== CONSULTATION DES COPIES ===
+
+Chaque étudiant a le droit de consulter sa copie d'examen dans un délai de 15 jours 
+après la publication des résultats. La demande se fait via KONOSYS, rubrique "Résultats".
+La consultation se fait en présence du professeur concerné.
+Toute réclamation de note doit être formulée par écrit dans les 8 jours suivant la 
+consultation. Le jury pédagogique statue définitivement sur les réclamations.
+
+=== DÉLIBÉRATION DU JURY ===
+
+Le jury pédagogique se réunit à la fin de chaque semestre pour délibérer sur les résultats.
+La décision du jury est souveraine et sans appel sur le fond.
+Les résultats sont publiés sur KONOSYS dans un délai de 72h après la délibération.

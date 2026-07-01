@@ -44,6 +44,9 @@ DOCUMENTS = [
     {"id": "DOC003", "source_type": "txt", "path": TXT_DIR / "doc003_charte.txt"},
     {"id": "DOC004", "source_type": "txt", "path": TXT_DIR / "doc004_reinscription.txt"},
     {"id": "DOC005", "source_type": "txt", "path": TXT_DIR / "doc005_attestation.txt"},
+    {"id": "DOC006", "source_type": "txt", "path": TXT_DIR / "doc006_faq_scolarite.txt"},
+    {"id": "DOC007", "source_type": "txt", "path": TXT_DIR / "doc007_reglement_examens.txt"},
+    {"id": "DOC008", "source_type": "txt", "path": TXT_DIR / "doc008_guide_stages.txt"},
 ]
 
 def extract_pdf(path: Path) -> str:
