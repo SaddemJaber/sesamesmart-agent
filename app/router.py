@@ -23,6 +23,7 @@ _STATUT_PATTERNS = [
     r'\bà\s+jour\b',
     r'\bfrais\s+de\s+scolarité\b',
 ]
+
 _FILIERE_PATTERNS = [
     r'\bma\s+fili[eè]re\b',
     r'\bquelle\s+fili[eè]re\b',
@@ -34,6 +35,7 @@ _ANNEE_PATTERNS = [
     r'\bquelle\s+ann[eé]e\b',
     r'\ben\s+quelle\s+ann[eé]e\b',
 ]
+
 _PROF_PATTERNS = [
     r'\benseigne\b',
     r'\bprofesseur\b',
@@ -41,7 +43,6 @@ _PROF_PATTERNS = [
     r'\bqui\s+donne\b',
     r'\bqui\s+fait\s+le\s+cours\b',
 ]
-
 
 _PROF_SANS_MATIERE_PATTERNS = [
     r'\bmes\s+professeurs?\b',
@@ -51,11 +52,18 @@ _PROF_SANS_MATIERE_PATTERNS = [
     r'\bliste.{0,10}profs?\b',
 ]
 
+_CLASSEMENT_PATTERNS = [
+    r'\bclassement\b',
+    r'\bmon\s+rang\b',
+    r'\bje\s+suis\s+class[eé]\b',
+    r'\bma\s+position\b',
+    r'\bcombien\s+d\'[eé]tudiants\b',
+    r'\brang\s+dans\b',
+]
 
 def _matches(question: str, patterns: list) -> bool:
     q = question.lower()
     return any(re.search(p, q) for p in patterns)
-
 
 def _extract_matiere(question: str) -> Optional[str]:
     """
@@ -63,7 +71,6 @@ def _extract_matiere(question: str) -> Optional[str]:
     Cherche le groupe nominal après les mots déclencheurs.
     """
     q = question.lower().strip()
-
     triggers = [
         r'enseigne\s+(?:le[s]?\s+|la\s+|les\s+|l\')?(.+?)[\?\.!]?\s*$',
         r'prof(?:esseur)?\s+de\s+(.+?)[\?\.!]?\s*$',
@@ -74,10 +81,8 @@ def _extract_matiere(question: str) -> Optional[str]:
         m = re.search(pattern, q)
         if m:
             matiere = m.group(1).strip()
-            return matiere.title()  # "mathématiques" → "Mathématiques"
-
+            return matiere.title()
     return None
-
 
 def route(question: str) -> dict:
     """
@@ -86,11 +91,11 @@ def route(question: str) -> dict:
     Ordre d'évaluation (important — ne pas changer) :
       1. moyenne          → SQL intent 'moyenne'
       2. statut_financier → SQL intent 'statut_financier'
-      3. professeur       → SQL intent 'professeur_matiere'
-      4. défaut           → RAG
-
-    Pourquoi cet ordre : "ma moyenne en maths" doit router sur 'moyenne',
-    pas sur 'professeur_matiere' même si "maths" est présent.
+      3. filiere          → SQL intent 'filiere'
+      4. annee            → SQL intent 'annee'
+      5. classement       → SQL intent 'classement'
+      6. professeur       → SQL intent 'professeur_matiere'
+      7. défaut           → RAG
     """
     # Intent 1 — Moyenne
     if _matches(question, _MOYENNE_PATTERNS):
@@ -99,19 +104,24 @@ def route(question: str) -> dict:
     # Intent 2 — Statut financier
     if _matches(question, _STATUT_PATTERNS):
         return {'route': 'sql', 'intent': 'statut_financier', 'params': {}}
-        # Intent 3 — Filière
+
+    # Intent 3 — Classement (avant filière — "classement dans ma filière" doit router ici)
+    if _matches(question, _CLASSEMENT_PATTERNS):
+        return {'route': 'sql', 'intent': 'classement', 'params': {}}
+
+    # Intent 4 — Filière
     if _matches(question, _FILIERE_PATTERNS):
         return {'route': 'sql', 'intent': 'filiere', 'params': {}}
 
-    # Intent 4 — Année
+    # Intent 5 — Année
     if _matches(question, _ANNEE_PATTERNS):
         return {'route': 'sql', 'intent': 'annee', 'params': {}}
 
-    # Intent 3a — Professeur sans matière précise → réponse guidée
+    # Intent 6a — Professeur sans matière précise → réponse guidée
     if _matches(question, _PROF_SANS_MATIERE_PATTERNS):
         return {'route': 'sql', 'intent': 'professeur_sans_matiere', 'params': {}}
 
-    # Intent 3b — Professeur avec matière
+    # Intent 6b — Professeur avec matière
     if _matches(question, _PROF_PATTERNS):
         matiere = _extract_matiere(question)
         params = {'matiere': matiere} if matiere else {}
