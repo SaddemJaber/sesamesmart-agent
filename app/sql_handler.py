@@ -102,3 +102,21 @@ def handle_sql(intent: str, params: dict, user_email: str) -> dict:
 
     # Intent inconnu — ne devrait jamais arriver si router.py est correct
     return {'data': None, 'intent': intent, 'error': 'intent_inconnu'}
+
+    if intent == "filiere":
+        res = _supabase.table("etudiants")\
+            .select("filiere")\
+            .eq("email", user_email)\
+            .execute()
+        if not res.data:
+            return {"error": "not_found", "intent": intent, "data": {}}
+        return {"error": None, "intent": intent, "data": res.data[0]}
+
+    if intent == "annee":
+        res = _supabase.table("etudiants")\
+            .select("annee")\
+            .eq("email", user_email)\
+            .execute()
+        if not res.data:
+            return {"error": "not_found", "intent": intent, "data": {}}
+        return {"error": None, "intent": intent, "data": res.data[0]}

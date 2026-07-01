@@ -9,6 +9,13 @@ REPONSE_BLOQUE      = "Pour régulariser votre situation, rapprochez-vous du ser
 REFUS_SECURITE      = "Je n'ai accès qu'à vos données personnelles."
 SOURCE_SQL          = "Base de données académique Sesame"
 
+# Phrases produites par le LLM indiquant une abstention — confidence doit être forcée à none
+_PHRASES_ABSTENTION = [
+    ABSTENTION_STRICTE,
+    REFUS_SECURITE,
+    "Je n'ai pas trouvé d'information",
+]
+
 
 def _compute_confidence(top_score: float) -> str:
     # Calculé depuis le score — jamais auto-déclaré par le LLM.
@@ -58,11 +65,21 @@ def build_rag_response(rag_result: dict) -> dict:
         }
 
     # Réponse normale
+    reponse     = rag_result["answer"]
+    sources     = rag_result["sources"]
+    suggestions = _compute_suggestions(rag_result["answer"], rag_result["sources"], top_score)
+
+    # Fix confidence : si le LLM a produit une phrase d'abstention, corriger confidence
+    if any(phrase in reponse for phrase in _PHRASES_ABSTENTION):
+        confidence  = "none"
+        sources     = []
+        suggestions = []
+
     return {
-        "reponse":     rag_result["answer"],
-        "sources":     rag_result["sources"],
-        "suggestions": _compute_suggestions(rag_result["answer"], rag_result["sources"], top_score),
-        "confidence":  "high"
+        "reponse":     reponse,
+        "sources":     sources,
+        "suggestions": suggestions,
+        "confidence":  confidence
     }
 
 
@@ -123,6 +140,15 @@ def build_sql_response(sql_result: dict) -> dict:
             "confidence":  "high"
         }
 
+    # Intent : professeur_sans_matiere — réponse guidée
+    if intent == "professeur_sans_matiere":
+        return {
+            "reponse":     "Pour trouver un professeur, précisez la matière. Exemple : 'Qui enseigne Algorithmique ?'",
+            "sources":     [],
+            "suggestions": ["Qui enseigne Algorithmique ?", "Qui enseigne Management ?"],
+            "confidence":  "high"
+        }
+
     # Intent : professeur_matiere
     if intent == "professeur_matiere":
         profs = data.get("professeurs", [])
@@ -148,3 +174,20 @@ def build_sql_response(sql_result: dict) -> dict:
         "suggestions": [],
         "confidence":  "none"
     }
+    if intent == "filiere":
+        filiere = data.get("filiere", "?")
+        return {
+            "reponse": f"Vous êtes inscrit(e) en filière : {filiere}.",
+            "sources": [SOURCE_SQL],
+            "suggestions": ["En quelle année suis-je ?"],
+            "confidence": "high"
+        }
+
+    if intent == "annee":
+        annee = data.get("annee", "?")
+        return {
+            "reponse": f"Vous êtes en année {annee}.",
+            "sources": [SOURCE_SQL],
+            "suggestions": ["Dans quelle filière suis-je ?"],
+            "confidence": "high"
+        }

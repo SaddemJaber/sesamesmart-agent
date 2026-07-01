@@ -34,11 +34,16 @@ def _load_doc_titles():
 
 
 def _post_with_retry(url: str, json_body: dict, headers: dict, max_retries: int = 3) -> requests.Response:
-    # Retry uniquement sur erreurs réseau — jamais sur 404/401/403
+    # Retry sur erreurs réseau ET sur 429 (rate limit) — jamais sur 404/401/403
     last_exception = None
     for attempt in range(max_retries):
         try:
             r = requests.post(url, json=json_body, headers=headers, timeout=60)
+            if r.status_code == 429:
+                wait = 10 * (attempt + 1)  # 10s, 20s, 30s
+                print(f"⚠️ Rate limit 429, attente {wait}s avant retry {attempt + 1}/{max_retries}...")
+                time.sleep(wait)
+                continue
             r.raise_for_status()
             return r
         except (requests.Timeout, requests.ConnectionError) as e:
@@ -47,8 +52,7 @@ def _post_with_retry(url: str, json_body: dict, headers: dict, max_retries: int 
                 raise
             print(f"⚠️ Erreur réseau, retry {attempt + 1}/{max_retries}...")
             time.sleep(3)
-    if last_exception:
-        raise last_exception
+    raise requests.exceptions.HTTPError(f"429 rate limit après {max_retries} retries")
 
 
 def get_query_embedding(question: str) -> list[float]:
@@ -105,23 +109,24 @@ def generate_answer(question: str, chunks: list[dict], user_role: str = "etudian
         f"[Extrait {i} — Source : {c['document_titre']}]\n{c['content']}"
         for i, c in enumerate(chunks, 1)
     )
-    prompt = f"""Tu es un assistant académique Sesame. Tu réponds uniquement en français.
+    prompt = f"""Tu es SesameSmart, assistant académique de l'école Sesame. Tu réponds UNIQUEMENT en français.
 
-RÈGLE ABSOLUE :
-- Réponds uniquement à partir du contexte fourni.
-- Si le contexte ne contient pas la réponse, dis exactement :
-  Je n'ai pas cette information dans ma base de connaissances.
-- N'invente rien.
+RÈGLE 1 — OBLIGATOIRE : Le contexte ci-dessous contient des extraits de documents officiels Sesame. Tu DOIS répondre en utilisant ces informations.
+
+RÈGLE 2 — INTERDICTION : Il t'est INTERDIT d'écrire "Je n'ai pas cette information dans ma base de connaissances" si le contexte contient des informations pertinentes. Cette phrase est réservée UNIQUEMENT aux cas où le contexte est totalement vide ou hors sujet.
+
+RÈGLE 3 : Si l'information est partielle, commence par "D'après les documents disponibles :" puis donne ce que tu as.
+
+RÈGLE 4 : Réponds en 3-5 lignes maximum. Utilise des bullet points si la réponse est une liste.
 
 Utilisateur actuel : {user_role}
 
-CONTEXTE :
+CONTEXTE (documents officiels Sesame) :
 {context}
 
-QUESTION :
-{question}
+QUESTION : {question}
 
-Réponse :"""
+Réponse directe :"""
 
     body = {
         "contents": [{"parts": [{"text": prompt}]}],
@@ -137,6 +142,14 @@ Réponse :"""
 
 
 def handle_rag(question: str, top_k: int = 3, user_role: str = "etudiant") -> dict:
+    # Garde-fou : questions trop courtes non interprétables
+    if len(question.strip()) < 8:
+        return {
+            "chunks": [], "top_score": 0.0,
+            "answer": "Veuillez formuler une question complète.",
+            "sources": [], "should_generate": False
+        }
+
     chunks = retrieve(question, top_k=top_k)
 
     if not chunks:

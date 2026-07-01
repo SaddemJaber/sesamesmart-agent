@@ -107,7 +107,10 @@ def main() -> None:
         print("Contactez la scolarité si vous pensez qu'il s'agit d'une erreur.")
         sys.exit(0)
 
-    print(f"{GREEN}✅ Bienvenue ! Connecté en tant que {email}{RESET}\n")
+        print(f"{GREEN}✅ Bienvenue ! Connecté en tant que {email}{RESET}")
+    print(f"{CYAN}Je réponds sur : vos données académiques (moyenne, statut, professeurs),")
+    print(f"les règlements, absences, réinscription et examens Sesame.")
+    print(f"Je ne réponds pas aux questions hors périmètre Sesame.{RESET}\n")
 
     last_suggestions: list[str] = []
     history: list[tuple[str, str]] = []

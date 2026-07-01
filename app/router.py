@@ -23,13 +23,32 @@ _STATUT_PATTERNS = [
     r'\bà\s+jour\b',
     r'\bfrais\s+de\s+scolarité\b',
 ]
+_FILIERE_PATTERNS = [
+    r'\bma\s+fili[eè]re\b',
+    r'\bquelle\s+fili[eè]re\b',
+    r'\bmon\s+d[eé]partement\b',
+]
 
+_ANNEE_PATTERNS = [
+    r'\bmon\s+ann[eé]e\b',
+    r'\bquelle\s+ann[eé]e\b',
+    r'\ben\s+quelle\s+ann[eé]e\b',
+]
 _PROF_PATTERNS = [
     r'\benseigne\b',
     r'\bprofesseur\b',
     r'\bprof\s+de\b',
     r'\bqui\s+donne\b',
     r'\bqui\s+fait\s+le\s+cours\b',
+]
+
+
+_PROF_SANS_MATIERE_PATTERNS = [
+    r'\bmes\s+professeurs?\b',
+    r'\bmes\s+profs?\b',
+    r'\bqui\s+sont\s+mes\s+profs?\b',
+    r'\bquels\s+profs?\b',
+    r'\bliste.{0,10}profs?\b',
 ]
 
 
@@ -80,8 +99,19 @@ def route(question: str) -> dict:
     # Intent 2 — Statut financier
     if _matches(question, _STATUT_PATTERNS):
         return {'route': 'sql', 'intent': 'statut_financier', 'params': {}}
+        # Intent 3 — Filière
+    if _matches(question, _FILIERE_PATTERNS):
+        return {'route': 'sql', 'intent': 'filiere', 'params': {}}
 
-    # Intent 3 — Professeur / matière
+    # Intent 4 — Année
+    if _matches(question, _ANNEE_PATTERNS):
+        return {'route': 'sql', 'intent': 'annee', 'params': {}}
+
+    # Intent 3a — Professeur sans matière précise → réponse guidée
+    if _matches(question, _PROF_SANS_MATIERE_PATTERNS):
+        return {'route': 'sql', 'intent': 'professeur_sans_matiere', 'params': {}}
+
+    # Intent 3b — Professeur avec matière
     if _matches(question, _PROF_PATTERNS):
         matiere = _extract_matiere(question)
         params = {'matiere': matiere} if matiere else {}
