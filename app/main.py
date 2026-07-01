@@ -5,9 +5,9 @@
 from flask import Flask, request, jsonify
 from dotenv import load_dotenv
 
-from app.router          import route
-from app.sql_handler     import handle_sql
-from app.rag_handler     import handle_rag
+from app.router           import route
+from app.sql_handler      import handle_sql
+from app.rag_handler      import handle_rag
 from app.response_builder import build_sql_response, build_rag_response
 
 load_dotenv()
@@ -47,8 +47,17 @@ def chat():
 
     # ── Branche RAG ────────────────────────────────────────────────────────────
     else:
-        rag_result = handle_rag(question, top_k=3, user_role=user_role)
-        response   = build_rag_response(rag_result)
+        try:
+            rag_result = handle_rag(question, top_k=3, user_role=user_role)
+            response   = build_rag_response(rag_result)
+        except Exception:
+            # Erreur API Gemini (429 rate limit, timeout, etc.) — jamais de 500
+            response = {
+                "reponse":     "Le service est temporairement indisponible. Veuillez réessayer dans quelques secondes.",
+                "sources":     [],
+                "suggestions": [],
+                "confidence":  "none"
+            }
 
     return jsonify(response), 200
 

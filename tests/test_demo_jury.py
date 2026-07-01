@@ -43,6 +43,7 @@ try:
     r = requests.post(BASE_URL, json={"question": "Comment fonctionne la réinscription ?", "user_email": TEST_EMAIL})
     check("HTTP 200",                       r.status_code == 200,                       f"| status={r.status_code}")
     d = r.json()
+    
     check("Champ 'reponse' présent",        "reponse"    in d)
     check("Champ 'confidence' présent",     "confidence" in d)
     check("Champ 'sources' présent",        "sources"    in d)

@@ -4,10 +4,10 @@
     "nom_complet": "Khalid El Mansouri",
     "departement": "FTA",
     "matieres_enseignees": [
-      "Administration Systèmes"
+      "Sécurité Informatique"
     ],
-    "disponibilite": "Mardi-Jeudi",
-    "bio_prof": "Enseignant en Administration Systèmes au département FTA.",
+    "disponibilite": "Lundi-Mercredi",
+    "bio_prof": "Enseignant en Sécurité Informatique au département FTA.",
     "email": "khalid.el.mansouri@sesame.ma"
   },
   {
@@ -15,10 +15,10 @@
     "nom_complet": "Layla Bensouda",
     "departement": "ING",
     "matieres_enseignees": [
-      "Algorithmique"
+      "Mathématiques Appliquées"
     ],
-    "disponibilite": "Lundi-Mercredi",
-    "bio_prof": "Enseignant en Algorithmique au département ING.",
+    "disponibilite": "Sur RDV",
+    "bio_prof": "Enseignant en Mathématiques Appliquées au département ING.",
     "email": "layla.bensouda@sesame.ma"
   },
   {
@@ -26,10 +26,10 @@
     "nom_complet": "Hassan Rifai",
     "departement": "MANAGEMENT",
     "matieres_enseignees": [
-      "Gestion de Projet"
+      "Marketing Digital"
     ],
-    "disponibilite": "Sur RDV",
-    "bio_prof": "Enseignant en Gestion de Projet au département MANAGEMENT.",
+    "disponibilite": "Lundi-Mercredi",
+    "bio_prof": "Enseignant en Marketing Digital au département MANAGEMENT.",
     "email": "hassan.rifai@sesame.ma"
   },
   {
@@ -37,10 +37,10 @@
     "nom_complet": "Nadia Ouazzani",
     "departement": "FTA",
     "matieres_enseignees": [
-      "Sécurité Informatique"
+      "Réseaux & Télécoms"
     ],
-    "disponibilite": "Mardi-Jeudi",
-    "bio_prof": "Enseignant en Sécurité Informatique au département FTA.",
+    "disponibilite": "Lundi-Mercredi",
+    "bio_prof": "Enseignant en Réseaux & Télécoms au département FTA.",
     "email": "nadia.ouazzani@sesame.ma"
   },
   {
@@ -48,10 +48,10 @@
     "nom_complet": "Youssef Tahiri",
     "departement": "ING",
     "matieres_enseignees": [
-      "Mathématiques Appliquées"
+      "Bases de données"
     ],
-    "disponibilite": "Sur RDV",
-    "bio_prof": "Enseignant en Mathématiques Appliquées au département ING.",
+    "disponibilite": "Lundi-Mercredi",
+    "bio_prof": "Enseignant en Bases de données au département ING.",
     "email": "youssef.tahiri@sesame.ma"
   },
   {
@@ -59,10 +59,10 @@
     "nom_complet": "Amina Bouzid",
     "departement": "MANAGEMENT",
     "matieres_enseignees": [
-      "Marketing Digital"
+      "Finance d'Entreprise"
     ],
-    "disponibilite": "Mardi-Jeudi",
-    "bio_prof": "Enseignant en Marketing Digital au département MANAGEMENT.",
+    "disponibilite": "Sur RDV",
+    "bio_prof": "Enseignant en Finance d'Entreprise au département MANAGEMENT.",
     "email": "amina.bouzid@sesame.ma"
   },
   {
@@ -72,7 +72,7 @@
     "matieres_enseignees": [
       "Sécurité Informatique"
     ],
-    "disponibilite": "Mardi-Jeudi",
+    "disponibilite": "Lundi-Mercredi",
     "bio_prof": "Enseignant en Sécurité Informatique au département FTA.",
     "email": "rachid.hajji@sesame.ma"
   },
@@ -81,10 +81,10 @@
     "nom_complet": "Samira Benkirane",
     "departement": "ING",
     "matieres_enseignees": [
-      "Mathématiques Appliquées"
+      "Bases de données"
     ],
     "disponibilite": "Mardi-Jeudi",
-    "bio_prof": "Enseignant en Mathématiques Appliquées au département ING.",
+    "bio_prof": "Enseignant en Bases de données au département ING.",
     "email": "samira.benkirane@sesame.ma"
   }
 ]

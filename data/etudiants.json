@@ -198,5 +198,105 @@
     "email": "soufiane.naciri@etu.sesame.ma",
     "moyenne_generale": 10.75,
     "statut_financier": "A_JOUR"
+  },
+  {
+    "id": "ETU021",
+    "nom": "Benjelloun",
+    "prenom": "Youssef",
+    "filiere": "ING",
+    "annee": 2,
+    "email": "youssef.benjelloun@etu.sesame.ma",
+    "moyenne_generale": 12.25,
+    "statut_financier": "A_JOUR"
+  },
+  {
+    "id": "ETU022",
+    "nom": "Ouahbi",
+    "prenom": "Mehdi",
+    "filiere": "MANAGEMENT",
+    "annee": 2,
+    "email": "mehdi.ouahbi@etu.sesame.ma",
+    "moyenne_generale": 14.25,
+    "statut_financier": "A_JOUR"
+  },
+  {
+    "id": "ETU023",
+    "nom": "Slaoui",
+    "prenom": "Aya",
+    "filiere": "ING",
+    "annee": 2,
+    "email": "aya.slaoui@etu.sesame.ma",
+    "moyenne_generale": 15.25,
+    "statut_financier": "A_JOUR"
+  },
+  {
+    "id": "ETU024",
+    "nom": "Bennis",
+    "prenom": "Khadija",
+    "filiere": "FTA",
+    "annee": 1,
+    "email": "khadija.bennis@etu.sesame.ma",
+    "moyenne_generale": 10.0,
+    "statut_financier": "A_JOUR"
+  },
+  {
+    "id": "ETU025",
+    "nom": "El Ghazali",
+    "prenom": "Rachid",
+    "filiere": "MANAGEMENT",
+    "annee": 2,
+    "email": "rachid.el.ghazali@etu.sesame.ma",
+    "moyenne_generale": 12.5,
+    "statut_financier": "A_JOUR"
+  },
+  {
+    "id": "ETU026",
+    "nom": "Bouhalli",
+    "prenom": "Sofia",
+    "filiere": "ING",
+    "annee": 1,
+    "email": "sofia.bouhalli@etu.sesame.ma",
+    "moyenne_generale": 9.75,
+    "statut_financier": "A_JOUR"
+  },
+  {
+    "id": "ETU027",
+    "nom": "Fahim",
+    "prenom": "Adam",
+    "filiere": "FTA",
+    "annee": 3,
+    "email": "adam.fahim@etu.sesame.ma",
+    "moyenne_generale": 8.25,
+    "statut_financier": "A_JOUR"
+  },
+  {
+    "id": "ETU028",
+    "nom": "El Khattabi",
+    "prenom": "Lina",
+    "filiere": "FTA",
+    "annee": 3,
+    "email": "lina.el.khattabi@etu.sesame.ma",
+    "moyenne_generale": 12.75,
+    "statut_financier": "A_JOUR"
+  },
+  {
+    "id": "ETU029",
+    "nom": "Sebti",
+    "prenom": "Othmane",
+    "filiere": "MANAGEMENT",
+    "annee": 2,
+    "email": "othmane.sebti@etu.sesame.ma",
+    "moyenne_generale": 10.5,
+    "statut_financier": "A_JOUR"
+  },
+  {
+    "id": "ETU030",
+    "nom": "Kabbaj",
+    "prenom": "Ghita",
+    "filiere": "ING",
+    "annee": 3,
+    "email": "ghita.kabbaj@etu.sesame.ma",
+    "moyenne_generale": 11.0,
+    "statut_financier": "A_JOUR"
   }
 ]
