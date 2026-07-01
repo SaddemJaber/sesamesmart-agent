@@ -89,11 +89,55 @@ def get_classement(user_email: str) -> dict:
         return {'data': res.data[0], 'intent': 'classement', 'error': None}
     except Exception as e:
         return {'data': None, 'intent': 'classement', 'error': str(e)}
+def get_note_matiere(user_email: str, matiere: str) -> dict:
+    """SELECT note FROM notes JOIN etudiants WHERE email = :email AND matiere = :matiere"""
+    try:
+        # Récupérer l'id de l'étudiant
+        res_etu = _supabase.table("etudiants").select("id").eq("email", user_email).execute()
+        if not res_etu.data:
+            return {'data': None, 'intent': 'note_matiere', 'error': 'not_found'}
+        etudiant_id = res_etu.data[0]['id']
 
+        res = _supabase.table("notes") \
+            .select("note, matiere") \
+            .eq("etudiant_id", etudiant_id) \
+            .ilike("matiere", f"%{matiere}%") \
+            .execute()
+
+        if not res.data:
+            return {'data': None, 'intent': 'note_matiere', 'error': 'matiere_introuvable'}  # ← pas not_found
+        return {'data': {'note': res.data[0]['note'], 'matiere': res.data[0]['matiere']}, 'intent': 'note_matiere', 'error': None}
+    except Exception as e:
+        return {'data': None, 'intent': 'note_matiere', 'error': str(e)}
+
+def get_meilleure_matiere(user_email: str) -> dict:
+    """Retourne la matière avec la note la plus haute pour cet étudiant."""
+    try:
+        res_etu = _supabase.table("etudiants").select("id").eq("email", user_email).execute()
+        if not res_etu.data:
+            return {'data': None, 'intent': 'meilleure_matiere', 'error': 'not_found'}
+        etudiant_id = res_etu.data[0]['id']
+
+        res = _supabase.table("notes") \
+            .select("note, matiere") \
+            .eq("etudiant_id", etudiant_id) \
+            .order("note", desc=True) \
+            .limit(1) \
+            .execute()
+
+        if not res.data:
+            return {'data': None, 'intent': 'meilleure_matiere', 'error': 'not_found'}
+        return {'data': {'note': res.data[0]['note'], 'matiere': res.data[0]['matiere']}, 'intent': 'meilleure_matiere', 'error': None}
+    except Exception as e:
+        return {'data': None, 'intent': 'meilleure_matiere', 'error': str(e)}
 # ─── Dispatcher ────────────────────────────────────────────────────────────────
 
 def handle_sql(intent: str, params: dict, user_email: str) -> dict:
     """Point d'entrée unique appelé par l'API Flask."""
+    if intent == 'note_matiere':
+        return get_note_matiere(user_email, params.get('matiere', ''))
+    if intent == 'meilleure_matiere':
+        return get_meilleure_matiere(user_email)
     if intent == 'moyenne':
         return get_moyenne(user_email)
     if intent == 'statut_financier':

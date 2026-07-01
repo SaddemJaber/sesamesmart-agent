@@ -129,5 +129,23 @@ def build_sql_response(sql_result: dict) -> dict:
             "suggestions": ["Quelle est ma moyenne ?"],
             "confidence":  "high"
         }
+    if intent == "note_matiere":
+        if not data:
+            return {"reponse": ABSTENTION_STRICTE, "sources": [], "suggestions": [], "confidence": "none"}
+        return {
+            "reponse":     f"Votre note en {data['matiere']} est de {data['note']}/20.",
+            "sources":     [SOURCE_SQL],
+            "suggestions": ["Quelle est ma meilleure matière ?", "Quelle est ma moyenne ?"],
+            "confidence":  "high"
+        }
 
+    if intent == "meilleure_matiere":
+        if not data:
+            return {"reponse": ABSTENTION_STRICTE, "sources": [], "suggestions": [], "confidence": "none"}
+        return {
+            "reponse":     f"Votre meilleure matière est {data['matiere']} avec une note de {data['note']}/20.",
+            "sources":     [SOURCE_SQL],
+            "suggestions": ["Quelle est ma moyenne ?", "Quel est mon classement ?"],
+            "confidence":  "high"
+        }
     return {"reponse": ABSTENTION_STRICTE, "sources": [], "suggestions": [], "confidence": "none"}
