@@ -119,8 +119,8 @@ def build_sql_response(sql_result: dict) -> dict:
         }
 
     if intent == "classement":
-        rang   = data.get("rang_filiere", "?")
-        total  = data.get("total_filiere", "?")
+        rang    = data.get("rang_filiere", "?")
+        total   = data.get("total_filiere", "?")
         filiere = data.get("filiere", "?")
         moyenne = data.get("moyenne_generale", "?")
         return {
@@ -129,6 +129,7 @@ def build_sql_response(sql_result: dict) -> dict:
             "suggestions": ["Quelle est ma moyenne ?"],
             "confidence":  "high"
         }
+
     if intent == "note_matiere":
         if not data:
             return {"reponse": ABSTENTION_STRICTE, "sources": [], "suggestions": [], "confidence": "none"}
@@ -148,4 +149,16 @@ def build_sql_response(sql_result: dict) -> dict:
             "suggestions": ["Quelle est ma moyenne ?", "Quel est mon classement ?"],
             "confidence":  "high"
         }
+
+    if intent == "moyenne_promo":
+        filiere       = data.get("filiere", "?")
+        moyenne_promo = data.get("moyenne_promo", "?")
+        nb            = data.get("nb_etudiants", "?")
+        return {
+            "reponse":     f"La moyenne de la filière {filiere} est de {moyenne_promo}/20 ({nb} étudiants).",
+            "sources":     [SOURCE_SQL],
+            "suggestions": ["Quel est mon classement ?", "Quelle est ma moyenne ?"],
+            "confidence":  "high"
+        }
+
     return {"reponse": ABSTENTION_STRICTE, "sources": [], "suggestions": [], "confidence": "none"}

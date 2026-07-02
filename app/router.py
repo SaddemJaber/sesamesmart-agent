@@ -3,7 +3,6 @@
 # Entrée : question (str)
 # Sortie : {'route': 'sql'|'rag', 'intent': str|None, 'params': dict}
 
-
 import re
 from typing import Optional
 
@@ -22,6 +21,13 @@ _MEILLEURE_MATIERE_PATTERNS = [
     r'\bmeilleur\s+résultat\b',
     r'\bmeilleure\s+note\b',
     r'\ben\s+quoi\s+je\s+suis\s+le\s+meilleur\b',
+]
+
+_MOYENNE_PROMO_PATTERNS = [
+    r'\bmoyenne\b.{0,30}\b(promo|promotion|fili[eè]re|classe)\b',
+    r'\b(promo|promotion|fili[eè]re|classe)\b.{0,30}\bmoyenne\b',
+    r'\bcomment\s+je\s+me\s+situe\b',
+    r'\bmoyenne\s+g[eé]n[eé]rale\s+de\s+(?:la\s+)?(?:promo|fili[eè]re)\b',
 ]
 
 _MOYENNE_PATTERNS = [
@@ -96,7 +102,7 @@ def _extract_matiere(question: str) -> Optional[str]:
     return None
 
 def _extract_matiere_note(question: str) -> Optional[str]:
-    """Extrait la matière depuis 'ma note en X' ou 'j'ai eu en X'."""
+    """Extrait la matière depuis 'ma note en X' ou 'j ai eu en X'."""
     q = question.lower().strip()
     triggers = [
         r'note\s+en\s+(.+?)[\?\.!]?\s*$',
@@ -114,16 +120,17 @@ def _extract_matiere_note(question: str) -> Optional[str]:
 def route(question: str) -> dict:
     """
     Ordre d'évaluation (ne pas changer) :
-      0. note_matiere     — AVANT moyenne (collision 'ma note' supprimée de moyenne)
+      0.  note_matiere       — AVANT moyenne (collision 'ma note' supprimée de moyenne)
       0b. meilleure_matiere
-      1. moyenne
-      2. statut_financier
-      3. classement       — AVANT filiere (collision "classement dans ma filière")
-      4. filiere
-      5. annee
+      0c. moyenne_promo      — AVANT moyenne (collision '\bmoyenne\b' trop large)
+      1.  moyenne
+      2.  statut_financier
+      3.  classement         — AVANT filiere (collision "classement dans ma filière")
+      4.  filiere
+      5.  annee
       6a. professeur_sans_matiere
       6b. professeur_matiere
-      7. défaut → RAG
+      7.  défaut → RAG
     """
     # Intent 0 — Note par matière (AVANT moyenne)
     if _matches(question, _NOTE_MATIERE_PATTERNS):
@@ -134,7 +141,11 @@ def route(question: str) -> dict:
     if _matches(question, _MEILLEURE_MATIERE_PATTERNS):
         return {'route': 'sql', 'intent': 'meilleure_matiere', 'params': {}}
 
-    # Intent 1 — Moyenne
+    # Intent 0c — Moyenne de promo (AVANT moyenne — collision \bmoyenne\b)
+    if _matches(question, _MOYENNE_PROMO_PATTERNS):
+        return {'route': 'sql', 'intent': 'moyenne_promo', 'params': {}}
+
+    # Intent 1 — Moyenne personnelle
     if _matches(question, _MOYENNE_PATTERNS):
         return {'route': 'sql', 'intent': 'moyenne', 'params': {}}
 

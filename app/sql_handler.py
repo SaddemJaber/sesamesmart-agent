@@ -89,10 +89,10 @@ def get_classement(user_email: str) -> dict:
         return {'data': res.data[0], 'intent': 'classement', 'error': None}
     except Exception as e:
         return {'data': None, 'intent': 'classement', 'error': str(e)}
+
 def get_note_matiere(user_email: str, matiere: str) -> dict:
     """SELECT note FROM notes JOIN etudiants WHERE email = :email AND matiere = :matiere"""
     try:
-        # Récupérer l'id de l'étudiant
         res_etu = _supabase.table("etudiants").select("id").eq("email", user_email).execute()
         if not res_etu.data:
             return {'data': None, 'intent': 'note_matiere', 'error': 'not_found'}
@@ -105,7 +105,7 @@ def get_note_matiere(user_email: str, matiere: str) -> dict:
             .execute()
 
         if not res.data:
-            return {'data': None, 'intent': 'note_matiere', 'error': 'matiere_introuvable'}  # ← pas not_found
+            return {'data': None, 'intent': 'note_matiere', 'error': 'matiere_introuvable'}
         return {'data': {'note': res.data[0]['note'], 'matiere': res.data[0]['matiere']}, 'intent': 'note_matiere', 'error': None}
     except Exception as e:
         return {'data': None, 'intent': 'note_matiere', 'error': str(e)}
@@ -130,6 +130,45 @@ def get_meilleure_matiere(user_email: str) -> dict:
         return {'data': {'note': res.data[0]['note'], 'matiere': res.data[0]['matiere']}, 'intent': 'meilleure_matiere', 'error': None}
     except Exception as e:
         return {'data': None, 'intent': 'meilleure_matiere', 'error': str(e)}
+
+def get_moyenne_promo(user_email: str) -> dict:
+    """Moyenne de la filière de l'étudiant — agrégat sur toute la promo.
+    Pourquoi : GROUP BY filiere sur etudiants, filtré sur la filière de l'utilisateur.
+    Pas de RLS ici : on expose une moyenne agrégée anonyme, pas des données individuelles.
+    """
+    try:
+        # Récupérer la filière de l'étudiant
+        res_etu = _supabase.table("etudiants") \
+            .select("filiere") \
+            .eq("email", user_email) \
+            .execute()
+        if not res_etu.data:
+            return {'data': None, 'intent': 'moyenne_promo', 'error': 'not_found'}
+        filiere = res_etu.data[0]['filiere']
+
+        # Moyenne agrégée de la filière
+        res = _supabase.table("etudiants") \
+            .select("moyenne_generale") \
+            .eq("filiere", filiere) \
+            .execute()
+        if not res.data:
+            return {'data': None, 'intent': 'moyenne_promo', 'error': 'not_found'}
+
+        notes = [r['moyenne_generale'] for r in res.data]
+        moyenne_promo = round(sum(notes) / len(notes), 2)
+
+        return {
+            'data': {
+                'filiere': filiere,
+                'moyenne_promo': moyenne_promo,
+                'nb_etudiants': len(notes)
+            },
+            'intent': 'moyenne_promo',
+            'error': None
+        }
+    except Exception as e:
+        return {'data': None, 'intent': 'moyenne_promo', 'error': str(e)}
+
 # ─── Dispatcher ────────────────────────────────────────────────────────────────
 
 def handle_sql(intent: str, params: dict, user_email: str) -> dict:
@@ -150,5 +189,7 @@ def handle_sql(intent: str, params: dict, user_email: str) -> dict:
         return get_annee(user_email)
     if intent == 'classement':
         return get_classement(user_email)
+    if intent == 'moyenne_promo':
+        return get_moyenne_promo(user_email)
     # Intent inconnu — ne devrait jamais arriver si router.py est correct
     return {'data': None, 'intent': intent, 'error': 'intent_inconnu'}
