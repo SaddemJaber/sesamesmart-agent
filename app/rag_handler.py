@@ -51,7 +51,7 @@ GEN_MODEL = "models/gemini-2.5-flash"
 GEN_URL   = f"https://generativelanguage.googleapis.com/v1beta/{GEN_MODEL}:generateContent"
 
 SIMILARITY_THRESHOLD = 0.65
-SEUIL_BAS  = 0.55
+SEUIL_BAS  = 0.58
 SEUIL_HAUT = 0.65
 
 _doc_titles: dict = {}
@@ -116,7 +116,7 @@ def get_query_embedding(question: str) -> list[float]:
 
 # ─── Retrieval ────────────────────────────────────────────────────────────────
 
-def retrieve(question: str, top_k: int = 2) -> list[dict]:
+def retrieve(question: str, top_k: int = 3) -> list[dict]:
     """Fix 2 : top_k réduit de 3 → 2. Moins de bruit dans le contexte LLM."""
     _load_doc_titles()
     embedding = get_query_embedding(question)
@@ -200,7 +200,7 @@ Réponse directe :"""
     return answer if answer else "Je n'ai pas cette information dans ma base de connaissances."
 # ─── Point d'entrée ───────────────────────────────────────────────────────────
 
-def handle_rag(question: str, top_k: int = 2, user_role: str = "etudiant") -> dict:
+def handle_rag(question: str, top_k: int = 3, user_role: str = "etudiant") -> dict:
     if len(question.strip()) < 8:
         return {
             "chunks": [], "top_score": 0.0,
