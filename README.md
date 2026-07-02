@@ -74,7 +74,15 @@ Voir `.env.example` pour la liste complète :
 SUPABASE_URL=https://xxx.supabase.co
 SUPABASE_KEY=sb_publishable_...
 GEMINI_API_KEY=AQ...
+
+# Rotation clés Gemini (optionnel — 1 clé suffit)
+GEMINI_API_KEY_1=
+GEMINI_API_KEY_2=
+GEMINI_API_KEY_3=
+GEMINI_API_KEY_4=
 ```
+
+La rotation de clés Gemini est supportée via `GEMINI_API_KEY_1`, `_2`, `_3`, `_4`. Sur erreur 429, le système bascule automatiquement vers la clé suivante — élimine les interruptions de service en cas de rate limit.
 
 ## Intents SQL supportés
 
@@ -97,14 +105,27 @@ Table `notes` : 180 lignes (30 étudiants × 6 matières). Colonnes : `id`, `etu
 
 ## Ingestion / RAG
 
-- **Corpus :** 5 documents `.txt` dans `data/corpus/`
+- **Corpus :** 8 documents `.txt` dans `data/corpus/`
 - **Embeddings :** `gemini-embedding-001`, REST v1beta, `outputDimensionality=768`, `taskType=RETRIEVAL_DOCUMENT`
 - **Chunking :** fenêtre glissante, max 550 tokens, overlap 100 tokens
-- **Chunks actuels :** 6 (DOC001:1, DOC002:2, DOC003:1, DOC004:1, DOC005:1)
+- **Chunks actuels :** 13 (DOC001:1, DOC002:2, DOC003:1, DOC004:1, DOC005:1, DOC006:5, DOC007:1, DOC008:1)
 - **Recherche :** RPC Supabase `match_chunks`, similarité cosine via pgvector
-- **Seuils :** `SEUIL_BAS=0.55` (génération), `SEUIL_HAUT=0.65` (confidence high)
+- **Seuils :** `SEUIL_BAS=0.58` (génération), `SEUIL_HAUT=0.65` (confidence high)
 
-> ⚠️ Ré-ingestion requiert un DELETE manuel via SQL Editor Supabase (RLS bloque DELETE avec clé anon).
+### Corpus RAG
+
+| ID | Titre | Type | Scope | Description |
+|---|---|---|---|---|
+| DOC001 | Note absences KONOSYS | note | FTA | Gestion et validation des absences |
+| DOC002 | Règlement Intérieur FTA | reglement | FTA | Règlement départemental |
+| DOC003 | Charte de l'étudiant | charte | Transversal | Droits et devoirs étudiants |
+| DOC004 | Email réinscription | email | Transversal | Processus de réinscription |
+| DOC005 | Email attestation | email | Transversal | Validation attestation et diplôme |
+| DOC006 | FAQ Scolarité | faq | Transversal | Questions fréquentes scolarité |
+| DOC007 | Règlement des examens | reglement | Transversal | Admissibilité, rattrapage, fraude |
+| DOC008 | Guide des stages | guide | Transversal | Conventions, évaluation, stages |
+
+> ⚠️ Avant toute ré-ingestion, INSERT les nouveaux docs dans la table `documents` (foreign key `document_chunks` → `documents`). Puis DELETE manuel dans SQL Editor Supabase.
 
 ```bash
 # Hotspot mobile obligatoire
@@ -116,9 +137,9 @@ Table `notes` : 180 lignes (30 étudiants × 6 matières). Colonnes : `id`, `etu
 | Task | Description | Status |
 |---|---|---|
 | 1 | Environnement & repo | ✅ |
-| 2 | Mock data (30 étudiants, 8 profs, 5 docs) | ✅ |
+| 2 | Mock data (30 étudiants, 8 profs, 8 docs) | ✅ |
 | 3 | Supabase + pgvector + seed | ✅ |
-| 4 | Pré-traitement & ingestion RAG (6 chunks) | ✅ |
+| 4 | Pré-traitement & ingestion RAG (13 chunks, 8 docs) | ✅ |
 | 5 | Cerveau chatbot (routeur + SQL + RAG) | ✅ |
 | 6 | API Flask — 24/24 tests | ✅ |
 | 7 | Scénarios jury — 18/18 tests | ✅ |
