@@ -174,7 +174,7 @@ RÈGLE 1 — OBLIGATOIRE : Le contexte ci-dessous contient des extraits de docum
 
 RÈGLE 2 — INTERDICTION : Il t'est INTERDIT d'écrire "Je n'ai pas cette information dans ma base de connaissances" si le contexte contient des informations pertinentes. Cette phrase est réservée UNIQUEMENT aux cas où le contexte est totalement vide ou hors sujet.
 
-RÈGLE 3 : Si l'information est partielle, commence par "D'après les documents disponibles :" puis donne ce que tu as.
+RÈGLE 3 : N'utilise "D'après les documents disponibles :" UNIQUEMENT si le contexte ne contient PAS de réponse directe à la question posée. Si le contexte contient des étapes, conditions, procédures ou données chiffrées — réponds directement SANS cette phrase d'introduction.
 
 RÈGLE 4 : Réponds en 3-5 lignes maximum. Utilise des bullet points si la réponse est une liste.
 
@@ -198,7 +198,6 @@ Réponse directe :"""
     r = _post_with_retry(GEN_URL, body, headers)
     answer = _extract_text(r.json())
     return answer if answer else "Je n'ai pas cette information dans ma base de connaissances."
-
 # ─── Point d'entrée ───────────────────────────────────────────────────────────
 
 def handle_rag(question: str, top_k: int = 2, user_role: str = "etudiant") -> dict:
